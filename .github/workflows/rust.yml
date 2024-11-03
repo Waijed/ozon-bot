@@ -41,6 +41,11 @@ jobs:
       - name: Set environment variable for NASM
         run: echo "ASM_NASM=$(which nasm)" >> $GITHUB_ENV
 
+      - name: Verify NASM is in PATH
+        run: |
+          echo "PATH: $PATH"
+          echo "ASM_NASM: $ASM_NASM"
+
       - name: Install cross
         run: cargo install cross
 
