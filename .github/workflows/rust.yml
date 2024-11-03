@@ -30,7 +30,7 @@ jobs:
         run: cross build --target x86_64-pc-windows-gnu --release
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Update to the latest version
         with:
           name: windows-build
           path: target/x86_64-pc-windows-gnu/release/*
