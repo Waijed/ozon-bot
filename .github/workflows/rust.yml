@@ -9,6 +9,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,18 +32,19 @@ jobs:
           toolchain: stable
           components: clippy, rustfmt
 
-      - name: Install cross
-        run: cargo install cross
-
       - name: Install NASM
         run: |
           sudo apt-get update
           sudo apt-get install -y nasm
           echo "NASM installed. Version: $(nasm -v)"
 
+      - name: Set environment variable for NASM
+        run: echo "ASM_NASM=$(which nasm)" >> $GITHUB_ENV
+
+      - name: Install cross
+        run: cargo install cross
+
       - name: Build for Windows
-        env:
-          ASM_NASM: /usr/bin/nasm
         run: cross build --target x86_64-pc-windows-gnu --release --jobs 4
 
       - name: Upload build artifacts
