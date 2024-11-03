@@ -26,11 +26,14 @@ jobs:
       - name: Install cross
         run: cargo install cross
 
+      - name: Install NASM
+        run: sudo apt-get update && sudo apt-get install -y nasm
+
       - name: Build for Windows
         run: cross build --target x86_64-pc-windows-gnu --release
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3  # Update to the latest version
+        uses: actions/upload-artifact@v3
         with:
           name: windows-build
           path: target/x86_64-pc-windows-gnu/release/*
