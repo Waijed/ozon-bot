@@ -17,6 +17,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cache Rust dependencies
+        uses: actions/cache@v2
+        with:
+          path: target/debug/.fingerprint
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -27,10 +35,15 @@ jobs:
         run: cargo install cross
 
       - name: Install NASM
-        run: sudo apt-get update && sudo apt-get install -y nasm
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nasm
+          echo "NASM installed. Version: $(nasm -v)"
 
       - name: Build for Windows
-        run: cross build --target x86_64-pc-windows-gnu --release
+        env:
+          ASM_NASM: /usr/bin/nasm
+        run: cross build --target x86_64-pc-windows-gnu --release --jobs 4
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
